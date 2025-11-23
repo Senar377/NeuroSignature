@@ -1,0 +1,10 @@
+{
+  "model_path": "grafik_2/models/best_model.pth",
+  "threshold": 86,
+  "auto_save": true,
+  "show_details": true,
+  "recent_models": [
+    "grafik_2/models/best_model.pth",
+    "grafik_2/models/final_model.pth"
+  ]
+}

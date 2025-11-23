@@ -1,0 +1,177 @@
+[
+  {
+    "timestamp": "2025-11-20 20:51:19",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for1.jpg",
+    "result": true,
+    "confidence": 0.9997718930244446
+  },
+  {
+    "timestamp": "2025-11-20 20:51:35",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for1.jpg",
+    "result": true,
+    "confidence": 0.9997718930244446
+  },
+  {
+    "timestamp": "2025-11-20 20:51:36",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for1.jpg",
+    "result": true,
+    "confidence": 0.9997718930244446
+  },
+  {
+    "timestamp": "2025-11-20 20:51:42",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for1.jpg",
+    "result": true,
+    "confidence": 0.9997718930244446
+  },
+  {
+    "timestamp": "2025-11-20 20:51:44",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for1.jpg",
+    "result": true,
+    "confidence": 0.9997718930244446
+  },
+  {
+    "timestamp": "2025-11-20 20:51:44",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for1.jpg",
+    "result": true,
+    "confidence": 0.9997718930244446
+  },
+  {
+    "timestamp": "2025-11-20 20:51:44",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for1.jpg",
+    "result": true,
+    "confidence": 0.9997718930244446
+  },
+  {
+    "timestamp": "2025-11-20 20:51:52",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/exp/5431743009680124147.jpg",
+    "result": false,
+    "confidence": 1.0647901035554241e-05
+  },
+  {
+    "timestamp": "2025-11-20 20:52:07",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/exp/org2.jpg",
+    "result": true,
+    "confidence": 0.9996161460876465
+  },
+  {
+    "timestamp": "2025-11-20 20:52:12",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/exp/org.jpg",
+    "result": false,
+    "confidence": 8.93799096957082e-06
+  },
+  {
+    "timestamp": "2025-11-20 20:52:16",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/exp/for.jpg",
+    "result": true,
+    "confidence": 0.9989615678787231
+  },
+  {
+    "timestamp": "2025-11-20 20:52:22",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/exp/1.jpg",
+    "result": false,
+    "confidence": 0.002534761792048812
+  },
+  {
+    "timestamp": "2025-11-20 20:52:28",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/exp/org1_.jpg",
+    "result": true,
+    "confidence": 0.999955415725708
+  },
+  {
+    "timestamp": "2025-11-20 20:53:02",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/exp/5431743009680124147.jpg",
+    "result": false,
+    "confidence": 1.0647901035554241e-05
+  },
+  {
+    "timestamp": "2025-11-23 12:46:55",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/original/3.jpg",
+    "result": false,
+    "confidence": 3.7369718484114856e-05
+  },
+  {
+    "timestamp": "2025-11-23 12:47:09",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "result": false,
+    "confidence": 1.22594383356045e-05
+  },
+  {
+    "timestamp": "2025-11-23 12:47:11",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "result": false,
+    "confidence": 1.22594383356045e-05
+  },
+  {
+    "timestamp": "2025-11-23 12:47:12",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "result": false,
+    "confidence": 1.22594383356045e-05
+  },
+  {
+    "timestamp": "2025-11-23 12:47:12",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "result": false,
+    "confidence": 1.22594383356045e-05
+  },
+  {
+    "timestamp": "2025-11-23 12:47:12",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "result": false,
+    "confidence": 1.22594383356045e-05
+  },
+  {
+    "timestamp": "2025-11-23 12:47:14",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "result": false,
+    "confidence": 1.22594383356045e-05
+  },
+  {
+    "timestamp": "2025-11-23 12:47:25",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for2.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged/for1.jpg",
+    "result": false,
+    "confidence": 2.638758132889052e-06
+  },
+  {
+    "timestamp": "2025-11-23 12:47:39",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for2.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/original/4.jpg",
+    "result": false,
+    "confidence": 5.496261564985616e-06
+  },
+  {
+    "timestamp": "2025-11-23 12:48:33",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/forged1/for2.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/original/4.jpg",
+    "result": false,
+    "confidence": 5.496261564985616e-06
+  },
+  {
+    "timestamp": "2025-11-23 12:48:41",
+    "original_path": "D:/GitHub/NeuroSignature/исходники/neuro/original/1.jpg",
+    "test_path": "D:/GitHub/NeuroSignature/исходники/neuro/original/4.jpg",
+    "result": false,
+    "confidence": 1.8539209122536704e-05
+  }
+]

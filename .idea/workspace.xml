@@ -5,6 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87684e33-18d8-44ae-ae07-623da205efc6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/NeuroSignature.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/Config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/Data_process.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/Loss_Metrics.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/Model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/Trainer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/Visual_func.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/best_model.pth" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/final_model.pth" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/model_loader.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/models/scanner.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/requirements_gui.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/ui/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/ui/history_widget.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/ui/main_window.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Grafic/ui/scanner_widget.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NN_Pytorch/models/best_model.pth" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NN_Pytorch/models/final_model.pth" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NN_Pytorch/Test.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/NN_Pytorch/Test.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NN_Pytorch/main.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/NN_Pytorch/main.ipynb" afterDir="false" />
     </list>
@@ -26,9 +56,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="35kZI5nsX97zGugZeeY7gA5m4Vs" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -37,24 +67,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore_missing_gitignore": "true",
-    "last_opened_file_path": "D:/GitHub/NeuroSignature/Grafic/models",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore_missing_gitignore&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/GitHub/NeuroSignature/grafik 2&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\GitHub\NeuroSignature\grafik 2" />
       <recent name="D:\GitHub\NeuroSignature\Grafic\models" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -95,8 +126,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
-        <option value="bundled-python-sdk-cab1f2013843-4ae2d6a61b08-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.21565.199" />
+        <option value="bundled-python-sdk-0e3be3396995-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23339.19" />
       </set>
     </attachedChunks>
   </component>
@@ -109,7 +139,9 @@
       <option name="presentableId" value="Default" />
       <updated>1759483862987</updated>
       <workItem from="1759483864397" duration="711000" />
-      <workItem from="1763655947652" duration="3653000" />
+      <workItem from="1763655947652" duration="3926000" />
+      <workItem from="1763659935589" duration="1287000" />
+      <workItem from="1763891120165" duration="3299000" />
     </task>
     <servers />
   </component>
@@ -120,6 +152,6 @@
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/NeuroSignature$main.coverage" NAME="main Coverage Results" MODIFIED="1763658781003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Grafic" />
+    <SUITE FILE_PATH="coverage/NeuroSignature$main.coverage" NAME="main Coverage Results" MODIFIED="1763895587001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/grafik 2" />
   </component>
 </project>

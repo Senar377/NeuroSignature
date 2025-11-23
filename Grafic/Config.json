@@ -1,0 +1,33 @@
+{
+  "app_name": "NeuroSignature Scanner",
+  "window_size": [
+    1400,
+    800
+  ],
+  "default_paths": {
+    "data_directory": "./Grafic/Data",
+    "models_directory": "./Grafic/models",
+    "test_directory": "./Grafic/TEST",
+    "output_directory": "./Grafic/outputs"
+  },
+  "model_settings": {
+    "available_models": [
+      "best_model.pth",
+      "final_model.pth"
+    ],
+    "default_model": "best_model.pth",
+    "img_size": [
+      128,
+      256
+    ]
+  },
+  "scanner_settings": {
+    "confidence_threshold": 0.5,
+    "auto_save_results": true,
+    "show_confidence": true
+  },
+  "ui_settings": {
+    "theme": "light",
+    "language": "ru"
+  }
+}

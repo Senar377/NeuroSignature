@@ -1,0 +1,66 @@
+[
+  {
+    "timestamp": "2025-11-23 14:56:42",
+    "original_file": "1.jpg",
+    "test_file": "for1.jpg",
+    "result": "ПОДДЕЛКА",
+    "confidence": 0.000647116030449979,
+    "threshold": 86
+  },
+  {
+    "timestamp": "2025-11-23 14:56:48",
+    "original_file": "1.jpg",
+    "test_file": "for1.jpg",
+    "result": "ПОДДЕЛКА",
+    "confidence": 0.000647116030449979,
+    "threshold": 86
+  },
+  {
+    "timestamp": "2025-11-23 15:00:32",
+    "original_file": "2.jpg",
+    "test_file": "1.jpg",
+    "result": "ПОДДЕЛКА",
+    "confidence": 0.0012583726856973954,
+    "threshold": 86
+  },
+  {
+    "timestamp": "2025-11-23 15:05:29",
+    "original_file": "1.jpg",
+    "test_file": "for1.jpg",
+    "result": "ПОДДЕЛКА",
+    "confidence": 0.000647116030449979,
+    "threshold": 86
+  },
+  {
+    "timestamp": "2025-11-23 15:05:41",
+    "original_file": "1.jpg",
+    "test_file": "5.jpg",
+    "result": "ПОДДЕЛКА",
+    "confidence": 0.0012583726856973954,
+    "threshold": 86
+  },
+  {
+    "timestamp": "2025-11-23 15:05:43",
+    "original_file": "1.jpg",
+    "test_file": "5.jpg",
+    "result": "ПОДДЕЛКА",
+    "confidence": 0.0012583726856973954,
+    "threshold": 86
+  },
+  {
+    "timestamp": "2025-11-23 15:06:16",
+    "original_file": "1.jpg",
+    "test_file": "5.jpg",
+    "result": "ПОДДЕЛКА",
+    "confidence": 0.0018539209122536704,
+    "threshold": 86
+  },
+  {
+    "timestamp": "2025-11-23 15:06:30",
+    "original_file": "1.jpg",
+    "test_file": "2.jpg",
+    "result": "ПОДДЕЛКА",
+    "confidence": 0.0018539209122536704,
+    "threshold": 86
+  }
+]
