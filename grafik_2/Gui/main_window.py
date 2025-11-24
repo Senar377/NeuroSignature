@@ -3,9 +3,9 @@ import sys
 from PySide6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,
                                QPushButton, QLabel, QFileDialog, QWidget, QTextEdit,
                                QMessageBox, QScrollArea, QSizePolicy, QFrame,
-                               QTabWidget, QStatusBar, QMenuBar, QMenu)
+                               QTabWidget, QStatusBar, QMenuBar, QMenu, QProgressBar)
 from PySide6.QtCore import Qt, QTimer, Signal, QObject, QThread
-from PySide6.QtGui import QFont, QColor, QPalette, QAction, QIcon
+from PySide6.QtGui import QFont, QColor, QPalette, QAction, QIcon, QPixmap
 
 
 class MainWindow(QMainWindow):
@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
 
     def setup_ui(self):
         self.setWindowTitle('NeuroSignature - Анализ подписей')
-        self.setGeometry(100, 100, 1200, 800)
+        self.setGeometry(100, 100, 1400, 900)
 
         # Установка темной темы
         self.set_dark_theme()
@@ -40,8 +40,9 @@ class MainWindow(QMainWindow):
             from Gui.verification_tab import VerificationTab
             from Gui.history_tab import HistoryTab
             from Gui.settings_tab import SettingsTab
+            from Gui.model_handler import model_handler
 
-            # Создаем вкладки БЕЗ передачи пути - модель сама найдет путь
+            # Создаем вкладки
             self.processing_tab = ProcessingTab(self)
             self.verification_tab = VerificationTab(self)
             self.history_tab = HistoryTab(self)
@@ -63,12 +64,15 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.status_bar)
 
         # Показываем статус в статус баре
-        model_handler = self.processing_tab.model_handler
-        if model_handler.model_path and os.path.exists(model_handler.model_path):
-            model_name = os.path.basename(model_handler.model_path)
-            self.status_bar.showMessage(f"✅ Модель загружена: {model_name}")
-        else:
-            self.status_bar.showMessage("⚠ ДЕМО-РЕЖИМ: Модель не найдена")
+        try:
+            if hasattr(model_handler, 'model_path') and model_handler.model_path and os.path.exists(model_handler.model_path):
+                model_name = os.path.basename(model_handler.model_path)
+                self.status_bar.showMessage(f"✅ Модель загружена: {model_name}")
+            else:
+                self.status_bar.showMessage("⚠ ДЕМО-РЕЖИМ: Модель не найдена")
+        except Exception as e:
+            print(f"Ошибка при проверке модели: {e}")
+            self.status_bar.showMessage("⚠ Статус модели неизвестен")
 
     def setup_menu(self):
         menubar = self.menuBar()
@@ -100,6 +104,16 @@ class MainWindow(QMainWindow):
         verification_action.setShortcut('F2')
         verification_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(1))
         view_menu.addAction(verification_action)
+
+        history_action = QAction('История', self)
+        history_action.setShortcut('F3')
+        history_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(2))
+        view_menu.addAction(history_action)
+
+        settings_action = QAction('Настройки', self)
+        settings_action.setShortcut('F4')
+        settings_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(3))
+        view_menu.addAction(settings_action)
 
         # Меню Помощь
         help_menu = menubar.addMenu('Помощь')
@@ -241,6 +255,44 @@ class MainWindow(QMainWindow):
                 left: 10px;
                 padding: 0 5px 0 5px;
             }
+
+            /* Стили для результатов */
+            .result-valid {
+                background-color: #1e3a1e;
+                color: #4ade80;
+                border: 2px solid #4ade80;
+                border-radius: 8px;
+                padding: 15px;
+                font-weight: bold;
+                font-size: 16px;
+            }
+            .result-invalid {
+                background-color: #3a1e1e;
+                color: #f87171;
+                border: 2px solid #f87171;
+                border-radius: 8px;
+                padding: 15px;
+                font-weight: bold;
+                font-size: 16px;
+            }
+            .confidence-high {
+                color: #27ae60;
+                font-weight: bold;
+                font-size: 24px;
+                text-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+            }
+            .confidence-medium {
+                color: #f39c12;
+                font-weight: bold;
+                font-size: 24px;
+                text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+            }
+            .confidence-low {
+                color: #e74c3c;
+                font-weight: bold;
+                font-size: 24px;
+                text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+            }
         """)
 
     def open_image(self):
@@ -270,7 +322,7 @@ class MainWindow(QMainWindow):
         about_text = """
 NeuroSignature - Система анализа и верификации подписей
 
-Версия 1.0
+Версия 2.0
 
 Возможности:
 • Анализ качества и характеристик подписей

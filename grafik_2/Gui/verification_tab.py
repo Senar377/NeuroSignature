@@ -1,3 +1,4 @@
+# Gui/verification_tab.py
 import os
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                                QPushButton, QTextEdit, QMessageBox, QFileDialog,
@@ -5,7 +6,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
 from PySide6.QtCore import Qt, Signal, QThread
 from PySide6.QtGui import QPixmap, QFont, QColor
 from .widgets import DragDropLabel
-from .model_handler import SignatureAnalyzer
+from .model_handler import model_handler  # Используем тот же model_handler
 
 
 class VerificationWorker(QThread):
@@ -13,30 +14,22 @@ class VerificationWorker(QThread):
     progress = Signal(str)
     error = Signal(str)
 
-    def __init__(self, image1_path, image2_path, model_handler):
+    def __init__(self, image1_path, image2_path):
         super().__init__()
         self.image1_path = image1_path
         self.image2_path = image2_path
-        self.model_handler = model_handler
 
     def run(self):
         try:
             self.progress.emit("Начало сравнения подписей...")
 
-            self.progress.emit("Анализ эталонной подписи...")
-
-            self.progress.emit("Анализ проверяемой подписи...")
-
-            self.progress.emit("Сравнение характеристик...")
-
-            # Реальное сравнение с помощью модели
-            comparison_result = self.model_handler.compare_signatures(
+            # Используем глобальный model_handler
+            comparison_result = model_handler.compare_signatures(
                 self.image1_path,
                 self.image2_path
             )
 
             self.progress.emit("Формирование результата...")
-
             self.finished.emit(comparison_result)
 
         except Exception as e:
@@ -50,7 +43,6 @@ class VerificationTab(QWidget):
         self.reference_image_path = None
         self.verify_image_path = None
         self.worker = None
-        self.model_handler = SignatureAnalyzer()  # Без передачи пути - автопоиск
         self.setup_ui()
 
     def setup_ui(self):
@@ -83,7 +75,7 @@ class VerificationTab(QWidget):
         reference_layout.addWidget(reference_label)
 
         self.reference_drop = DragDropLabel("Перетащите эталонную подпись")
-        self.reference_drop.image_dropped.connect(lambda path: self.load_reference_image(path))
+        self.reference_drop.image_dropped.connect(self.load_reference_image)
         reference_layout.addWidget(self.reference_drop)
 
         reference_btn = QPushButton("Выбрать эталон")
@@ -100,7 +92,7 @@ class VerificationTab(QWidget):
         verify_layout.addWidget(verify_label)
 
         self.verify_drop = DragDropLabel("Перетащите проверяемую подпись")
-        self.verify_drop.image_dropped.connect(lambda path: self.load_verify_image(path))
+        self.verify_drop.image_dropped.connect(self.load_verify_image)
         verify_layout.addWidget(self.verify_drop)
 
         verify_btn = QPushButton("Выбрать для проверки")
@@ -213,8 +205,7 @@ class VerificationTab(QWidget):
 
         self.worker = VerificationWorker(
             self.reference_image_path,
-            self.verify_image_path,
-            self.model_handler
+            self.verify_image_path
         )
         self.worker.progress.connect(self.update_progress)
         self.worker.finished.connect(self.on_verification_finished)

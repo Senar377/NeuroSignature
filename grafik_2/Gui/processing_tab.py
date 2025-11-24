@@ -1,302 +1,423 @@
 import os
-import time
-from datetime import datetime
-from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-                               QPushButton, QTextEdit, QProgressBar, QMessageBox,
-                               QFileDialog, QGroupBox, QApplication)
-from PySide6.QtCore import Qt, Signal, QThread
+import base64
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
+                               QLabel, QFileDialog, QFrame, QProgressBar, QTextEdit,
+                               QGroupBox)
+from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QPixmap, QFont
-from .widgets import DragDropLabel
-from .model_handler import SignatureAnalyzer
+from Gui.model_handler import model_handler
 
 
-class ProcessingWorker(QThread):
-    finished = Signal(dict)
-    progress = Signal(str)
+class ProcessingThread(QThread):
+    finished = Signal(object, object, object)
     error = Signal(str)
 
-    def __init__(self, image_path, model_handler):
+    def __init__(self, img1_path, img2_path):
         super().__init__()
-        self.image_path = image_path
-        self.model_handler = model_handler
+        self.img1_path = img1_path
+        self.img2_path = img2_path
 
     def run(self):
         try:
-            self.progress.emit("Анализ качества подписи...")
-            time.sleep(0.5)
-
-            self.progress.emit("Извлечение характеристик...")
-            time.sleep(0.5)
-
-            # Реальный анализ с помощью модели
-            analysis_result = self.model_handler.analyze_single_signature(self.image_path)
-
-            self.progress.emit("Формирование отчета...")
-            time.sleep(0.5)
-
-            # Генерация детального отчета
-            result_text = self._generate_analysis_report(analysis_result)
-
-            self.progress.emit("Анализ завершен")
-            self.finished.emit({
-                'text': result_text,
-                'analysis': analysis_result
-            })
-
+            result, confidence, result_image = model_handler.verify_signature(
+                self.img1_path, self.img2_path, show_result=True
+            )
+            self.finished.emit(result, confidence, result_image)
         except Exception as e:
-            self.error.emit(f"Ошибка обработки: {str(e)}")
-
-    def _generate_analysis_report(self, analysis: dict) -> str:
-        """Генерация детального отчета анализа"""
-        report = f"АНАЛИЗ ПОДПИСИ\n"
-        report += "=" * 50 + "\n\n"
-
-        report += f"Файл: {os.path.basename(self.image_path)}\n"
-        report += f"Дата анализа: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-
-        report += "ОСНОВНЫЕ ХАРАКТЕРИСТИКИ:\n"
-        report += f"• Подлинность: {'ПОДЛИННАЯ' if analysis['is_genuine'] else 'ПОДДЕЛЬНАЯ'}\n"
-        report += f"• Уверенность анализа: {analysis['confidence']:.1%}\n"
-        report += f"• Общее качество: {analysis['quality_score']:.1%}\n"
-        report += f"• Четкость подписи: {analysis['clarity']:.1%}\n"
-        report += f"• Интенсивность нажима: {analysis['pressure']:.1%}\n"
-        report += f"• Угол наклона: {analysis['slant']:.1f}°\n"
-        report += f"• Согласованность линий: {analysis['consistency']:.1%}\n\n"
-
-        # Оценка качества
-        quality_score = (analysis['clarity'] + analysis['consistency'] + analysis['pressure']) / 3
-        if quality_score > 0.8:
-            quality_verdict = "ОТЛИЧНОЕ"
-        elif quality_score > 0.6:
-            quality_verdict = "ХОРОШЕЕ"
-        elif quality_score > 0.4:
-            quality_verdict = "УДОВЛЕТВОРИТЕЛЬНОЕ"
-        else:
-            quality_verdict = "НИЗКОЕ"
-
-        report += f"ОБЩАЯ ОЦЕНКА КАЧЕСТВА: {quality_verdict}\n"
-        report += f"Итоговый балл: {quality_score:.1%}\n\n"
-
-        # Рекомендации
-        report += "РЕКОМЕНДАЦИИ:\n"
-        if analysis['clarity'] < 0.6:
-            report += "• Подпись имеет низкую четкость\n"
-        if analysis['pressure'] < 0.5:
-            report += "• Слабый нажим, рекомендуется более уверенное написание\n"
-        if analysis['consistency'] < 0.7:
-            report += "• Наблюдается нестабильность в начертании\n"
-
-        if quality_score > 0.7:
-            report += "• Подпись соответствует стандартам качества\n"
-
-        if not analysis.get('features_extracted', True):
-            report += "\n⚠ Внимание: анализ выполнен с ограниченной точностью\n"
-
-        return report
+            self.error.emit(str(e))
 
 
 class ProcessingTab(QWidget):
-    def __init__(self, main_window):
-        super().__init__()
-        self.main_window = main_window
-        self.current_image_path = None
-        self.worker = None
-        self.model_handler = SignatureAnalyzer()  # Без передачи пути - автопоиск
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.main_window = parent
+        self.current_image1 = None
+        self.current_image2 = None
         self.setup_ui()
 
     def setup_ui(self):
         layout = QVBoxLayout(self)
-        layout.setSpacing(10)
-        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(15)
+        layout.setContentsMargins(20, 20, 20, 20)
 
-        # Группа загрузки изображения
-        image_group = QGroupBox("Загрузка изображения подписи")
-        image_layout = QVBoxLayout(image_group)
+        # Заголовок
+        title = QLabel("🔍 Анализ и верификация подписей")
+        title.setFont(QFont("Arial", 18, QFont.Bold))
+        title.setAlignment(Qt.AlignCenter)
+        title.setStyleSheet("color: #ffffff; margin: 10px;")
+        layout.addWidget(title)
 
-        self.drop_label = DragDropLabel("Перетащите изображение подписи сюда")
-        self.drop_label.image_dropped.connect(self.load_image)
-        image_layout.addWidget(self.drop_label)
+        # Группа загрузки изображений
+        upload_group = QGroupBox("Загрузка изображений")
+        upload_group.setStyleSheet("""
+            QGroupBox {
+                font-weight: bold;
+                font-size: 14px;
+                color: #ffffff;
+                border: 2px solid #555555;
+                border-radius: 10px;
+                margin-top: 10px;
+                padding-top: 15px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 10px 0 10px;
+            }
+        """)
+        upload_layout = QHBoxLayout(upload_group)
 
-        # Кнопка выбора файла
-        file_buttons_layout = QHBoxLayout()
-        self.select_file_btn = QPushButton("Выбрать файл")
-        self.select_file_btn.clicked.connect(self.select_image_file)
-        file_buttons_layout.addWidget(self.select_file_btn)
+        # Левая панель - эталонная подпись
+        left_panel = QVBoxLayout()
+        left_panel.setSpacing(10)
 
-        self.clear_image_btn = QPushButton("Очистить")
-        self.clear_image_btn.clicked.connect(self.clear_image)
-        self.clear_image_btn.setEnabled(False)
-        file_buttons_layout.addWidget(self.clear_image_btn)
+        self.btn_load_ref = QPushButton("📁 Загрузить эталонную подпись")
+        self.btn_load_ref.setFixedHeight(40)
+        self.btn_load_ref.clicked.connect(lambda: self.load_image(1))
+        left_panel.addWidget(self.btn_load_ref)
 
-        file_buttons_layout.addStretch()
-        image_layout.addLayout(file_buttons_layout)
-        layout.addWidget(image_group)
+        self.lbl_ref_image = QLabel()
+        self.lbl_ref_image.setAlignment(Qt.AlignCenter)
+        self.lbl_ref_image.setMinimumSize(350, 250)
+        self.lbl_ref_image.setStyleSheet("""
+            QLabel {
+                border: 3px dashed #555555;
+                border-radius: 10px;
+                background-color: #1e1e1e;
+                color: #cccccc;
+                font-size: 14px;
+                padding: 20px;
+            }
+        """)
+        self.lbl_ref_image.setText("Эталонная подпись\nне загружена")
+        left_panel.addWidget(self.lbl_ref_image)
 
-        # Группа обработки
-        process_group = QGroupBox("Анализ подписи")
-        process_layout = QVBoxLayout(process_group)
+        self.lbl_ref_name = QLabel("Файл не выбран")
+        self.lbl_ref_name.setAlignment(Qt.AlignCenter)
+        self.lbl_ref_name.setStyleSheet("color: #cccccc; font-size: 12px; padding: 5px;")
+        left_panel.addWidget(self.lbl_ref_name)
 
-        info_label = QLabel("Анализ определяет: качество, четкость, нажим, угол наклона и подлинность подписи")
-        info_label.setStyleSheet("color: #cccccc; font-size: 11px; padding: 5px;")
-        info_label.setWordWrap(True)
-        process_layout.addWidget(info_label)
+        # Правая панель - проверяемая подпись
+        right_panel = QVBoxLayout()
+        right_panel.setSpacing(10)
 
-        self.process_btn = QPushButton("Начать анализ")
-        self.process_btn.clicked.connect(self.process_image)
-        self.process_btn.setEnabled(False)
-        process_layout.addWidget(self.process_btn)
+        self.btn_load_test = QPushButton("📁 Загрузить проверяемую подпись")
+        self.btn_load_test.setFixedHeight(40)
+        self.btn_load_test.clicked.connect(lambda: self.load_image(2))
+        right_panel.addWidget(self.btn_load_test)
+
+        self.lbl_test_image = QLabel()
+        self.lbl_test_image.setAlignment(Qt.AlignCenter)
+        self.lbl_test_image.setMinimumSize(350, 250)
+        self.lbl_test_image.setStyleSheet("""
+            QLabel {
+                border: 3px dashed #555555;
+                border-radius: 10px;
+                background-color: #1e1e1e;
+                color: #cccccc;
+                font-size: 14px;
+                padding: 20px;
+            }
+        """)
+        self.lbl_test_image.setText("Проверяемая подпись\nне загружена")
+        right_panel.addWidget(self.lbl_test_image)
+
+        self.lbl_test_name = QLabel("Файл не выбран")
+        self.lbl_test_name.setAlignment(Qt.AlignCenter)
+        self.lbl_test_name.setStyleSheet("color: #cccccc; font-size: 12px; padding: 5px;")
+        right_panel.addWidget(self.lbl_test_name)
+
+        upload_layout.addLayout(left_panel)
+        upload_layout.addLayout(right_panel)
+        layout.addWidget(upload_group)
+
+        # Кнопка анализа
+        self.btn_analyze = QPushButton("🚀 Начать анализ подписей")
+        self.btn_analyze.setFont(QFont("Arial", 14, QFont.Bold))
+        self.btn_analyze.setFixedHeight(50)
+        self.btn_analyze.setStyleSheet("""
+            QPushButton {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #2980b9;
+            }
+            QPushButton:disabled {
+                background-color: #34495e;
+                color: #7f8c8d;
+            }
+        """)
+        self.btn_analyze.clicked.connect(self.analyze_signatures)
+        self.btn_analyze.setEnabled(False)  # Изначально отключена
+        layout.addWidget(self.btn_analyze)
 
         # Прогресс бар
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
-        self.progress_bar.setMinimum(0)
-        self.progress_bar.setMaximum(0)
-        process_layout.addWidget(self.progress_bar)
-
-        # Статус обработки
-        self.status_label = QLabel("Загрузите изображение подписи для анализа")
-        self.status_label.setStyleSheet("color: #cccccc; font-size: 11px; padding: 5px;")
-        process_layout.addWidget(self.status_label)
-
-        layout.addWidget(process_group)
+        self.progress_bar.setStyleSheet("""
+            QProgressBar {
+                border: 2px solid #555555;
+                border-radius: 5px;
+                background-color: #1e1e1e;
+                text-align: center;
+                color: white;
+                height: 20px;
+            }
+            QProgressBar::chunk {
+                background-color: #3498db;
+                border-radius: 3px;
+            }
+        """)
+        layout.addWidget(self.progress_bar)
 
         # Группа результатов
-        result_group = QGroupBox("Результаты анализа")
-        result_layout = QVBoxLayout(result_group)
+        self.result_group = QGroupBox("Результаты анализа")
+        self.result_group.setStyleSheet("""
+            QGroupBox {
+                font-weight: bold;
+                font-size: 14px;
+                color: #ffffff;
+                border: 2px solid #555555;
+                border-radius: 10px;
+                margin-top: 10px;
+                padding-top: 15px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 10px 0 10px;
+            }
+        """)
+        self.result_layout = QVBoxLayout(self.result_group)
 
-        self.result_text = QTextEdit()
-        self.result_text.setPlaceholderText("Здесь появится детальный анализ подписи...")
-        self.result_text.setMinimumHeight(250)
-        result_layout.addWidget(self.result_text)
+        # Место для изображения с результатами
+        self.lbl_result_image = QLabel()
+        self.lbl_result_image.setAlignment(Qt.AlignCenter)
+        self.lbl_result_image.setMinimumHeight(400)
+        self.lbl_result_image.setStyleSheet("""
+            QLabel {
+                background-color: #1e1e1e;
+                border: 2px solid #555555;
+                border-radius: 10px;
+                color: #cccccc;
+            }
+        """)
+        self.lbl_result_image.setText("Результаты анализа появятся здесь")
+        self.result_layout.addWidget(self.lbl_result_image)
 
-        # Кнопки результатов
-        result_buttons_layout = QHBoxLayout()
-        self.copy_btn = QPushButton("Копировать отчет")
-        self.copy_btn.clicked.connect(self.copy_text)
-        self.copy_btn.setEnabled(False)
-        result_buttons_layout.addWidget(self.copy_btn)
+        # Детальные результаты
+        self.detailed_results = QTextEdit()
+        self.detailed_results.setReadOnly(True)
+        self.detailed_results.setMaximumHeight(200)
+        self.detailed_results.setStyleSheet("""
+            QTextEdit {
+                background-color: #1e1e1e;
+                border: 2px solid #555555;
+                border-radius: 10px;
+                color: #ffffff;
+                font-size: 13px;
+                padding: 10px;
+            }
+        """)
+        self.result_layout.addWidget(self.detailed_results)
 
-        self.save_btn = QPushButton("Сохранить отчет")
-        self.save_btn.clicked.connect(self.save_text)
-        self.save_btn.setEnabled(False)
-        result_buttons_layout.addWidget(self.save_btn)
+        layout.addWidget(self.result_group)
+        self.result_group.setVisible(False)
 
-        result_buttons_layout.addStretch()
-        result_layout.addLayout(result_buttons_layout)
-        layout.addWidget(result_group)
-
-        layout.addStretch()
-
-    def select_image_file(self):
+    def load_image(self, image_type):
+        """Загрузка изображения с правильной проверкой типа"""
         file_path, _ = QFileDialog.getOpenFileName(
             self,
             "Выберите изображение подписи",
             "",
             "Images (*.png *.jpg *.jpeg *.bmp *.tiff);;All Files (*)"
         )
+
         if file_path:
-            self.load_image(file_path)
+            pixmap = QPixmap(file_path)
+            if not pixmap.isNull():
+                # Масштабирование изображения для preview
+                scaled_pixmap = pixmap.scaled(350, 250, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
-    def load_image(self, file_path):
-        try:
-            self.drop_label.set_image(file_path)
-            self.current_image_path = file_path
-            self.process_btn.setEnabled(True)
-            self.clear_image_btn.setEnabled(True)
-            self.status_label.setText(f"Изображение загружено: {os.path.basename(file_path)}")
-            self.main_window.update_status(f"Изображение загружено: {os.path.basename(file_path)}")
+                if image_type == 1:
+                    self.current_image1 = file_path
+                    self.lbl_ref_image.setPixmap(scaled_pixmap)
+                    self.lbl_ref_name.setText(os.path.basename(file_path))
+                    self.lbl_ref_name.setStyleSheet("color: #27ae60; font-size: 12px; padding: 5px;")
+                else:
+                    self.current_image2 = file_path
+                    self.lbl_test_image.setPixmap(scaled_pixmap)
+                    self.lbl_test_name.setText(os.path.basename(file_path))
+                    self.lbl_test_name.setStyleSheet("color: #27ae60; font-size: 12px; padding: 5px;")
 
-            # Очищаем предыдущие результаты
-            self.result_text.clear()
-            self.copy_btn.setEnabled(False)
-            self.save_btn.setEnabled(False)
+                # Правильная проверка для активации кнопки анализа
+                self.update_analyze_button_state()
 
-        except Exception as e:
-            self.show_error(f"Ошибка загрузки изображения: {str(e)}")
+    def update_analyze_button_state(self):
+        """Обновление состояния кнопки анализа на основе загруженных изображений"""
+        # Проверяем, что оба изображения загружены (не None и не пустые строки)
+        both_loaded = (self.current_image1 is not None and
+                       self.current_image2 is not None and
+                       len(str(self.current_image1).strip()) > 0 and
+                       len(str(self.current_image2).strip()) > 0)
 
-    def clear_image(self):
-        self.drop_label.clear_image()
-        self.current_image_path = None
-        self.process_btn.setEnabled(False)
-        self.clear_image_btn.setEnabled(False)
-        self.result_text.clear()
-        self.status_label.setText("Загрузите изображение подписи для анализа")
-        self.copy_btn.setEnabled(False)
-        self.save_btn.setEnabled(False)
-        self.main_window.update_status("Изображение очищено")
+        self.btn_analyze.setEnabled(bool(both_loaded))
 
-    def process_image(self):
-        if not self.current_image_path:
-            self.show_error("Сначала загрузите изображение")
+    def analyze_signatures(self):
+        """Запуск анализа подписей"""
+        # Дополнительная проверка перед анализом
+        if not self.current_image1 or not self.current_image2:
+            self.show_error_message("Пожалуйста, загрузите обе подписи для анализа")
             return
 
-        if self.worker and self.worker.isRunning():
-            self.show_error("Анализ уже выполняется")
+        # Проверяем существование файлов
+        if not os.path.exists(self.current_image1) or not os.path.exists(self.current_image2):
+            self.show_error_message("Один или оба файла изображений не найдены")
             return
 
-        self.process_btn.setEnabled(False)
+        self.btn_analyze.setEnabled(False)
         self.progress_bar.setVisible(True)
-        self.status_label.setText("Начало анализа...")
-        self.result_text.clear()
+        self.progress_bar.setRange(0, 0)  # indeterminate progress
+        self.result_group.setVisible(False)
 
-        self.worker = ProcessingWorker(self.current_image_path, self.model_handler)
-        self.worker.progress.connect(self.update_progress)
-        self.worker.finished.connect(self.on_processing_finished)
-        self.worker.error.connect(self.on_processing_error)
-        self.worker.start()
+        # Запуск анализа в отдельном потоке
+        self.thread = ProcessingThread(self.current_image1, self.current_image2)
+        self.thread.finished.connect(self.on_analysis_finished)
+        self.thread.error.connect(self.on_analysis_error)
+        self.thread.start()
 
-    def update_progress(self, message):
-        self.status_label.setText(message)
-        self.main_window.update_status(message)
+    def show_error_message(self, message):
+        """Показать сообщение об ошибке"""
+        from PySide6.QtWidgets import QMessageBox
+        QMessageBox.warning(self, "Ошибка", message)
 
-    def on_processing_finished(self, result):
-        self.result_text.setText(result['text'])
-        self.copy_btn.setEnabled(True)
-        self.save_btn.setEnabled(True)
-        self.process_btn.setEnabled(True)
+    def on_analysis_finished(self, result, confidence, result_image):
+        """Обработка завершения анализа"""
         self.progress_bar.setVisible(False)
-        self.status_label.setText("Анализ завершен успешно")
+        self.btn_analyze.setEnabled(True)
+        self.result_group.setVisible(True)
+
+        # Отображение результата
+        if result_image:
+            try:
+                pixmap = QPixmap()
+                pixmap.loadFromData(base64.b64decode(result_image))
+                scaled_pixmap = pixmap.scaled(800, 400, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                self.lbl_result_image.setPixmap(scaled_pixmap)
+            except Exception as e:
+                print(f"Ошибка при загрузке изображения результата: {e}")
+                self.lbl_result_image.setText("Ошибка отображения результата")
+
+        # Детальные результаты
+        analysis = model_handler.get_detailed_analysis(confidence, result)
+        self.display_detailed_results(analysis)
 
         # Добавляем в историю
         if hasattr(self.main_window, 'history_tab'):
+            history_text = f"Анализ подписей: {analysis['percentage']} уверенности - {analysis['verdict']}"
             self.main_window.history_tab.add_to_history(
-                self.current_image_path,
-                result['text'],
+                f"{os.path.basename(self.current_image1)} vs {os.path.basename(self.current_image2)}",
+                f"Результат: {analysis['verdict']}\nУверенность: {analysis['percentage']}\nУровень: {analysis['confidence_text']}",
                 "Анализ подписи"
             )
 
-        self.main_window.update_status("Анализ завершен")
-
-    def on_processing_error(self, error_message):
-        self.show_error(f"Ошибка анализа: {error_message}")
-        self.process_btn.setEnabled(True)
+    def on_analysis_error(self, error_msg):
+        """Обработка ошибки анализа"""
         self.progress_bar.setVisible(False)
-        self.status_label.setText("Ошибка анализа")
-        self.main_window.update_status("Ошибка анализа")
+        self.btn_analyze.setEnabled(True)
+        self.detailed_results.setHtml(f"""
+        <div style='color: #e74c3c; text-align: center; padding: 20px;'>
+            <h2 style='margin: 10px;'>❌ Ошибка анализа</h2>
+            <p style='font-size: 14px;'>{error_msg}</p>
+        </div>
+        """)
 
-    def copy_text(self):
-        text = self.result_text.toPlainText()
-        if text:
-            QApplication.clipboard().setText(text)
-            self.status_label.setText("Отчет скопирован в буфер обмена")
-            self.main_window.update_status("Отчет скопирован")
+    def display_detailed_results(self, analysis):
+        """Отображение детальных результатов с красивым форматированием"""
 
-    def save_text(self):
-        file_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Сохранить отчет анализа",
-            f"анализ_подписи_{time.strftime('%Y%m%d_%H%M%S')}.txt",
-            "Text Files (*.txt);;All Files (*)"
-        )
-        if file_path:
-            try:
-                with open(file_path, 'w', encoding='utf-8') as f:
-                    f.write(self.result_text.toPlainText())
-                self.status_label.setText(f"Отчет сохранен в {os.path.basename(file_path)}")
-                self.main_window.update_status(f"Отчет сохранен в {os.path.basename(file_path)}")
-            except Exception as e:
-                self.show_error(f"Ошибка сохранения: {str(e)}")
+        # Определяем CSS классы для уверенности
+        confidence_color = {
+            'high': '#27ae60',
+            'medium': '#f39c12',
+            'low': '#e74c3c'
+        }.get(analysis['confidence_level'], '#cccccc')
 
-    def show_error(self, message):
-        QMessageBox.critical(self, "Ошибка", message)
-        self.main_window.update_status(f"Ошибка: {message}")
+        # Создаем красивый HTML вывод
+        html = f"""
+        <div style="text-align: center; padding: 20px;">
+            <!-- Основной вердикт -->
+            <div style="margin: 15px 0;">
+                <h1 style="color: {analysis['color']}; margin: 10px; font-size: 28px;">
+                    {analysis['icon']} {analysis['verdict']}
+                </h1>
+            </div>
+
+            <!-- Уровень уверенности -->
+            <div style="background-color: #2c3e50; border-radius: 10px; padding: 15px; margin: 15px 0;">
+                <div style="font-size: 48px; color: {confidence_color}; font-weight: bold; margin: 10px;">
+                    {analysis['percentage']}
+                </div>
+                <div style="color: #ecf0f1; font-size: 16px; margin: 5px;">
+                    {analysis['confidence_icon']} {analysis['confidence_text']}
+                </div>
+            </div>
+
+            <!-- Разделитель -->
+            <hr style="border: 1px solid #34495e; margin: 20px 0;">
+
+            <!-- Информация о файлах -->
+            <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+                <div style="text-align: center;">
+                    <div style="color: #3498db; font-weight: bold;">📄 ЭТАЛОН</div>
+                    <div style="color: #bdc3c7; font-size: 12px;">{os.path.basename(self.current_image1) if self.current_image1 else 'Не загружено'}</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: #e67e22; font-weight: bold;">🔍 ПРОВЕРЯЕМАЯ</div>
+                    <div style="color: #bdc3c7; font-size: 12px;">{os.path.basename(self.current_image2) if self.current_image2 else 'Не загружено'}</div>
+                </div>
+            </div>
+
+            <!-- Дополнительная информация -->
+            <div style="background-color: #34495e; border-radius: 8px; padding: 10px; margin: 15px 0;">
+                <div style="color: #ecf0f1; font-size: 12px;">
+                    Модель: SiameseViT • Время анализа: < 2 сек • Разрешение: 128x256
+                </div>
+            </div>
+        </div>
+        """
+
+        self.detailed_results.setHtml(html)
+
+    def load_image_from_menu(self, file_path):
+        """Загрузка изображения из главного меню (для совместимости)"""
+        if not self.current_image1:
+            self.current_image1 = file_path
+            pixmap = QPixmap(file_path)
+            if not pixmap.isNull():
+                scaled_pixmap = pixmap.scaled(350, 250, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                self.lbl_ref_image.setPixmap(scaled_pixmap)
+                self.lbl_ref_name.setText(os.path.basename(file_path))
+                self.lbl_ref_name.setStyleSheet("color: #27ae60; font-size: 12px; padding: 5px;")
+        elif not self.current_image2:
+            self.current_image2 = file_path
+            pixmap = QPixmap(file_path)
+            if not pixmap.isNull():
+                scaled_pixmap = pixmap.scaled(350, 250, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                self.lbl_test_image.setPixmap(scaled_pixmap)
+                self.lbl_test_name.setText(os.path.basename(file_path))
+                self.lbl_test_name.setStyleSheet("color: #27ae60; font-size: 12px; padding: 5px;")
+        else:
+            # Если оба уже загружены, заменяем проверяемую
+            self.current_image2 = file_path
+            pixmap = QPixmap(file_path)
+            if not pixmap.isNull():
+                scaled_pixmap = pixmap.scaled(350, 250, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                self.lbl_test_image.setPixmap(scaled_pixmap)
+                self.lbl_test_name.setText(os.path.basename(file_path))
+                self.lbl_test_name.setStyleSheet("color: #27ae60; font-size: 12px; padding: 5px;")
+
+        self.update_analyze_button_state()
