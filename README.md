@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![NeuroSignature Logo](docs/logo.png)
+![NeuroSignature Logo](grafik_2/logo.png)
 
 **Профессиональный анализатор подписей на соответствие оригиналу**
 
