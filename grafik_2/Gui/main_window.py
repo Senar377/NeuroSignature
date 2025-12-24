@@ -36,19 +36,19 @@ class MainWindow(QMainWindow):
 
         # Импорт и создание вкладок
         try:
-            from Gui.processing_tab import ProcessingTab
+           # from Gui.processing_tab import ProcessingTab
             from Gui.verification_tab import VerificationTab
             from Gui.history_tab import HistoryTab
             from Gui.settings_tab import SettingsTab
             from Gui.model_handler import model_handler
 
             # Создаем вкладки
-            self.processing_tab = ProcessingTab(self)
+           # self.processing_tab = ProcessingTab(self)
             self.verification_tab = VerificationTab(self)
             self.history_tab = HistoryTab(self)
             self.settings_tab = SettingsTab(self)
 
-            self.tab_widget.addTab(self.processing_tab, "📊 Анализ подписи")
+            #self.tab_widget.addTab(self.processing_tab, "📊 Анализ подписи")
             self.tab_widget.addTab(self.verification_tab, "🔍 Верификация")
             self.tab_widget.addTab(self.history_tab, "📋 История")
             self.tab_widget.addTab(self.settings_tab, "⚙ Настройки")
@@ -95,15 +95,10 @@ class MainWindow(QMainWindow):
         # Меню Вид
         view_menu = menubar.addMenu('Вид')
 
-        processing_action = QAction('Анализ подписи', self)
-        processing_action.setShortcut('F1')
-        processing_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(0))
-        view_menu.addAction(processing_action)
-
-        verification_action = QAction('Верификация', self)
-        verification_action.setShortcut('F2')
-        verification_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(1))
-        view_menu.addAction(verification_action)
+       # verification_action = QAction('Верификация', self)
+       # verification_action.setShortcut('F2')
+       # verification_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(1))
+      #  view_menu.addAction(verification_action)
 
         history_action = QAction('История', self)
         history_action.setShortcut('F3')
