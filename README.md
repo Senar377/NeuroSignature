@@ -51,7 +51,7 @@
 
 ### Установка из готового дистрибутива (рекомендуется)
 
-1. **Скачайте последнюю версию** из [раздела Releases]([https://github.com/ваш-username/SigMatch-Pro/releases](https://github.com/Senar377/NeuroSignature/releases)
+1. **Скачайте последнюю версию** из [раздела Releases](https://github.com/Senar377/NeuroSignature/releases)
 2. **Запустите установщик:**
    - `SigMatchPro_Setup_1.0.0.exe` — для Windows с установкой
    - `SigMatchPro_Portable_1.0.0.zip` — портативная версия
