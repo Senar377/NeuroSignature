@@ -8,6 +8,7 @@ dist/
 *.dll
 *.so
 *.dylib
+*.pth
 
 # Виртуальное окружение
 venv/
