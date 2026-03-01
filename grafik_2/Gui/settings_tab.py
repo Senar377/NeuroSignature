@@ -115,7 +115,7 @@ class SettingsTab(QWidget):
         self.theme_combo = QComboBox()
         self.theme_combo.addItems([
             "Светлая",
-            "Темная (по умолчанию)"
+            "Темная"
         ])
         self.theme_combo.currentTextChanged.connect(self.on_theme_changed)
         grid_layout.addWidget(theme_label, 0, 0)

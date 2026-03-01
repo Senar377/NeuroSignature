@@ -240,24 +240,9 @@ class MainWindow(QMainWindow):
             <table style='width:100%; border-collapse: collapse;'>
                 <tr>
                     <td style='padding: 10px;'><b>👤 Полное имя:</b></td>
-                    <td style='padding: 10px;'>Кашапов Арсен Маратович</td>
+                    <td style='padding: 10px;'>Кашапов Арсен Айратович</td>
                 </tr>
-                <tr style='background-color: #f0f0f0;'>
-                    <td style='padding: 10px;'><b>📍 Местоположение:</b></td>
-                    <td style='padding: 10px;'>Россия, Казань</td>
-                </tr>
-                <tr>
-                    <td style='padding: 10px;'><b>💻 Специализация:</b></td>
-                    <td style='padding: 10px;'>Deep Learning, Computer Vision, GUI Development</td>
-                </tr>
-                <tr style='background-color: #f0f0f0;'>
-                    <td style='padding: 10px;'><b>🚀 Проекты:</b></td>
-                    <td style='padding: 10px;'>NeuroSignature, Neural Networks, AI Systems</td>
-                </tr>
-                <tr>
-                    <td style='padding: 10px;'><b>🎯 Любимые технологии:</b></td>
-                    <td style='padding: 10px;'>PyTorch, TensorFlow, Qt, OpenCV</td>
-                </tr>
+
                 <tr style='background-color: #f0f0f0;'>
                     <td style='padding: 10px;'><b>⭐️ Достижения:</b></td>
                     <td style='padding: 10px;'>Разработка системы верификации подписей с точностью 94.7%</td>
@@ -268,8 +253,6 @@ class MainWindow(QMainWindow):
 
             <h3 style='color: #2c3e50;'>🌟 Интересные факты:</h3>
             <ul>
-                <li>Начал программировать в 12 лет на Pascal</li>
-                <li>Создал первую нейросеть в 16 лет для распознавания рукописных цифр</li>
                 <li>Увлекается компьютерным зрением и обработкой изображений</li>
                 <li>Любит решать сложные задачи оптимизации алгоритмов</li>
                 <li>Верит, что ИИ изменит мир к лучшему</li>
@@ -588,7 +571,7 @@ NeuroSignature - Система анализа и верификации под�
 • PyTorch для нейросетевых моделей
 • Компьютерное зрение для анализа изображений
 
-Разработано Кашаповым Арсеном для автоматизации проверки подписей.
+Разработано для автоматизации проверки подписей.
 """
         QMessageBox.about(self, "О программе", about_text)
 
