@@ -9,6 +9,7 @@ dist/
 *.so
 *.dylib
 *.pth
+*.pack
 
 # Виртуальное окружение
 venv/
